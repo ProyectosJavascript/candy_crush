@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             square.addEventListener('dragstart', dragStart)
             // de momento no hacen falta los otros eventos
             // https://www.tutorialesprogramacionya.com/htmlya/html5/temarios/descripcion.php?cod=174&punto=45&inicio=40
-            // square.addEventListener('dragend', dragEnd)
+            square.addEventListener('dragend', dragEnd)
             square.addEventListener('dragover', dragOver)
             // square.addEventListener('dragenter', dragEnter)
             // square.addEventListener('dragleave', dragLeave)
@@ -60,18 +60,15 @@ document.addEventListener('DOMContentLoaded', ()=>{
     function dragStart(){
         colorBeingDragged = this.style.backgroundColor
         squareIdBeingDragged = parseInt(this.id)
-        console.log(this)
-        console.log(colorBeingDragged)
-        console.log(this.id, 'dragStart')
+        // console.log(this)
+        // console.log(colorBeingDragged)
+        // console.log(this.id, 'dragStart')
     }
 
-    // function dragEnd(){
-    //     console.log(this.id, 'dragEnd')
-    // }
-
+    
     function dragOver(e){
-        e.preventDefault()
-        console.log(this.id, 'dragOver')
+        e.preventDefault() // previene porque el compor. por defecto es regresar al origeno es 
+        // console.log(this.id, 'dragOver')
     }
 
     // function dragEnter(){
@@ -84,11 +81,43 @@ document.addEventListener('DOMContentLoaded', ()=>{
     // }
 
     function dragDrop(){
+        console.log(this.id, 'dragdrop')
         colorBeingReplaced = this.style.backgroundColor
         squareIdBeingReplaced = parseInt(this.id)
-        console.log(this.id, 'dragDrop')
+        // console.log(this.id, 'dragDrop')
         this.style.backgroundColor = colorBeingDragged
         squares[squareIdBeingDragged].style.backgroundColor = colorBeingReplaced
     }
+
+    //the drop event always fires just before the dragend event
+    // A drop event is fired from the drop target
+    // A dragend event is fired from the source of the drag
+
+    function dragEnd(){
+        console.log(this.id, 'id al dragEnd')
+        let validMoves = [
+            squareIdBeingDragged + 1,
+            squareIdBeingDragged + width,
+            squareIdBeingDragged -1,
+            squareIdBeingDragged - width
+        ]
+
+        let validMove = validMoves.includes(squareIdBeingReplaced)
+        console.log('esto es el valid move', validMove)
+        console.log('id reemplazada antes del if', squareIdBeingReplaced)
+        if (validMove && squareIdBeingReplaced){
+            // squareIdBeingReplaced = null // clear the value of squareIdBeingReplaced ready for a fresh start
+            console.log('id original', squareIdBeingDragged)
+            console.log('id donde voy', squareIdBeingReplaced)
+        } else if (squareIdBeingReplaced && !validMove) { //quiero mover la casilla a otra casilla, pero no es un movimiento válido
+            squares[squareIdBeingDragged].style.backgroundColor = colorBeingDragged
+            squares[squareIdBeingReplaced].style.backgroundColor = colorBeingReplaced
+            console.log('invalid move- muy lejos')
+        } else { // creo que ya se cubren todas las opciones con lo anterio, pero beuno
+            squares[squareIdBeingDragged].style.backgroundColor = colorBeingDragged
+            console.log('invalid move- fuera del tablero')
+        }
+    }
+
 
 })

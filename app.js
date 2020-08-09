@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
     // esto lo pone ania pero no veo que sirva
     // ahora veo que sirve para encontrar el square por la id y cambiarlo de color
     const squares = []
-
+    let score = 0
     const candyColors = [
         'red',
         'yellow',
@@ -119,5 +119,29 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
     }
 
+    //check for matches
+    // check for row of three
+    function checkRowForThree(){
+        for (i = 0; i < 61; i++){
+            // defino mi fila de tres casillas
+            let rowOfThree = [i, i+1, i+2]
+            // cojo el color de mi primera casilla de las tres
+            let decidedColor = squares[i].style.backgroundColor
+            // varible booleana para saber si tenemos un espacio en blanco o no. Es blank (true) si el background color de las casillas está vacío 
+            const isBlank = squares[i].style.backgroundColor === ''
+
+            // si todos los indices en nuestro array son del decidedColor ( el color de la primera casilla de las tres), y el color no es blanco
+            if (rowOfThree.every(index => squares[index].style.backgroundColor === decidedColor && !isBlank)){
+                score += 3
+                rowOfThree.forEach(index => {
+                    squares[index].style.backgroundColor = ''
+                })
+                
+            }
+        }
+    }
+    window.setInterval(function(){
+        checkRowForThree()
+    }, 100)
 
 })
